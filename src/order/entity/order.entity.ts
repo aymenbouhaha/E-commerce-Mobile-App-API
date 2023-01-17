@@ -1,13 +1,11 @@
-import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
-import {AdminEntity} from "../../user/entity/admin.entity";
-import {ClientEntity} from "../../user/entity/client.entity";
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {ProductEntity} from "../../product/entity/product.entity";
+import {UserEntity} from "../../user/entity/user.entity";
 
-
-export enum orderState {
+export enum OrderState {
     enCours = "EnCours",
-    accepted = "accepted",
-    refused = "refused"
+    accepted = "Accepted",
+    refused = "Refused"
 }
 
 
@@ -15,36 +13,25 @@ export enum orderState {
 export class OrderEntity {
 
     @PrimaryGeneratedColumn()
-    id : number
+    id :string
 
     @Column(
         {
             type : "enum",
-            enum : orderState,
-            default : orderState.enCours
+            enum : OrderState,
+            default : OrderState.enCours
         }
     )
     state : string
-
-
-    @ManyToOne(
-        type => AdminEntity,
-        (admin)=> admin.orders
-    )
-    admin : AdminEntity
-
-
-    @ManyToOne(type => ClientEntity,
-        (client) => client.orders
-    )
-    client: ClientEntity
-
 
     @ManyToOne(
         type => ProductEntity
     )
     product : ProductEntity
 
+
+    @ManyToOne(
+        type => UserEntity
+    )
+    client : UserEntity
 }
-
-

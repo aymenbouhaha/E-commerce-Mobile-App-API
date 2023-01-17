@@ -1,9 +1,16 @@
-import {Column, Entity, PrimaryGeneratedColumn, TableInheritance} from "typeorm";
+import {Column, Entity, ManyToMany, JoinTable,PrimaryGeneratedColumn} from "typeorm";
+import {ProductEntity} from "../../product/entity/product.entity";
+
+
+
+export enum UserRole {
+    admin ="admin",
+    client = "client"
+}
+
 
 @Entity("user")
-@TableInheritance({ column: { type: "varchar", name: "type" } })
-export class UserEntity{
-
+export class UserEntity {
 
     @PrimaryGeneratedColumn()
     id : number
@@ -24,8 +31,34 @@ export class UserEntity{
     phoneNumber : string
 
     @Column()
-    image : string
+    image :string
 
+    @Column(
+        {
+            type : "enum",
+            enum : UserRole,
+            default : UserRole.client
+        }
+    )
+    role : string
 
+    @ManyToMany(
+        type => ProductEntity,
+        product => product.clientFav
+    )
+    @JoinTable(
+        {
+            name : "user_fav",
+            joinColumn : {
+                name : "user_id",
+                referencedColumnName : "id"
+            },
+            inverseJoinColumn : {
+                name : "product_id",
+                referencedColumnName : "id"
+            }
+        }
+    )
+    favoriteProduct? : ProductEntity[]
 
 }
