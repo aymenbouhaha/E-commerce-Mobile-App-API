@@ -1,29 +1,28 @@
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn, TableInheritance} from "typeorm";
-import {AdminEntity} from "../../user/entity/admin.entity";
+import {Column, Entity, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
+import {UserEntity} from "../../user/entity/user.entity";
 
 @Entity("product")
-@TableInheritance({ column: { type: "varchar", name: "type" } })
 export class ProductEntity {
 
     @PrimaryGeneratedColumn()
     id : number
 
     @Column()
-    name : string
+    name :string
 
     @Column(
         {
             type : "float"
         }
     )
-    price: number
+    price : number
 
     @Column()
     image : string
 
-    @ManyToOne(
-        type => AdminEntity
+    @ManyToMany(
+        type => UserEntity,
+        user => user.favoriteProduct
     )
-    admin : AdminEntity
-
+    clientFav? : UserEntity[]
 }
