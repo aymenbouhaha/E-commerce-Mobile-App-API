@@ -8,12 +8,16 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {UserEntity} from "./user/entity/user.entity";
 import {OrderEntity} from "./order/entity/order.entity";
 import {ProductEntity} from "./product/entity/product.entity";
+import {ConfigModule} from "@nestjs/config";
 
 
 
 
 @Module({
-  imports: [OrderModule, ProductModule, UserModule ,
+  imports: [ConfigModule.forRoot({
+    isGlobal : true
+  })
+    ,OrderModule, ProductModule, UserModule ,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
