@@ -1,28 +1,24 @@
-import {Column, Entity, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
-import {UserEntity} from "../../user/entity/user.entity";
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { UserEntity } from '../../user/entity/user.entity';
 
-@Entity("product")
+@Entity('product')
 export class ProductEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id : number
+  @Column()
+  name: string;
 
-    @Column()
-    name :string
+  @Column({
+    type: 'float',
+  })
+  price: number;
 
-    @Column(
-        {
-            type : "float"
-        }
-    )
-    price : number
+  @Column()
+  image: string;
+  @Column()
+  description: string;
 
-    @Column()
-    image : string
-
-    @ManyToMany(
-        type => UserEntity,
-        user => user.favoriteProduct
-    )
-    clientFav? : UserEntity[]
+  @ManyToMany((type) => UserEntity, (user) => user.favoriteProduct)
+  clientFav?: UserEntity[];
 }
