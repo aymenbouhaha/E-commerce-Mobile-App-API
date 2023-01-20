@@ -27,7 +27,7 @@ export class UserService {
         try {
             await this.userRepository.save(user);
         }catch (e){
-            throw new ConflictException(`l'email et le mot de passe doivent etre unique`)
+            throw new ConflictException(`l'email et le username doivent etre unique`)
         }
         return {
             id : user.id,
@@ -48,6 +48,7 @@ export class UserService {
         const hashedPassword = await bcrypt.hash(password, user.salt)
         if (hashedPassword== user.password){
             const payload = {
+                id : user.id,
                 username : user.username,
                 email :user.email ,
                 role : user.role ,
@@ -65,6 +66,10 @@ export class UserService {
         {
             throw new NotFoundException(`l'email ou le mot de passe sont incorrecte`)
         }
+    }
+
+    modifyProfile(){
+
     }
 
 }
