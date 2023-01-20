@@ -7,7 +7,7 @@ import {UserEntity, UserRole} from "../user/entity/user.entity";
 
 @Injectable()
 export class ProductService {
-  
+
     constructor(
         @InjectRepository(ProductEntity)
         private productRepository : Repository<ProductEntity>
@@ -51,4 +51,4 @@ export class ProductService {
     }
 
 
-
+}

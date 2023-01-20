@@ -1,5 +1,5 @@
-import { OrderDTO} from './order.dto';
-import {Body, Controller, Get, Param, ParseIntPipe, Patch, UseGuards} from '@nestjs/common';
+import { AddOrderDto} from './dto/add-order.dto';
+import {Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UseGuards} from '@nestjs/common';
 import {OrderService} from "./order.service";
 import {JwtAuthGuard} from "../user/guard/jwt-auth.guard";
 import {User} from "../decorator/user.decorator";
@@ -26,10 +26,10 @@ export class OrderController {
     }
     
     
-     @Post('/create')
-    async create(@Body() order: OrderDTO) {
-    const created_order = await this.orderService.create(order); 
-    return created_order;
+    @Post('/create')
+    @UseGuards(JwtAuthGuard)
+    async create(@Body() order: AddOrderDto, @User() user) {
+        return  await this.orderService.create(order,user);
     }
 
 

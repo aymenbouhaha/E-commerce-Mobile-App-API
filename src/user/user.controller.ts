@@ -1,14 +1,17 @@
 import {
   Body,
-  Controller,
+  Controller, Get,
   Param,
   ParseIntPipe,
   Patch,
-  Post,
+  Post, UseGuards,
 } from '@nestjs/common';
 import { UserSignUpDto } from './dto/usersignup.dto';
 import { UserService } from './user.service';
 import { LoginDto } from './dto/login.dto';
+import {JwtAuthGuard} from "./guard/jwt-auth.guard";
+import {User} from "../decorator/user.decorator";
+
 
 @Controller('user')
 export class UserController {
@@ -23,11 +26,23 @@ export class UserController {
   login(@Body() credentials: LoginDto) {
     return this.userService.login(credentials);
   }
-  @Patch('/:idU/add/:idP')
+
+  @Patch('/favorite/add/:id')
+  @UseGuards(JwtAuthGuard)
   addTofavorite(
-    @Param('idU', ParseIntPipe) idUser,
-    @Param('idP', ParseIntPipe) idProduct,
+    @Param('id', ParseIntPipe) idProduct,
+    @User() user
   ) {
-    return this.userService.addTofavorite(idUser, idProduct);
+    return this.userService.addToFavorite(user, idProduct);
   }
+
+  @Get("/favorite")
+  @UseGuards(JwtAuthGuard)
+  getFavoriteList(@User() user){
+    return this.userService.getFavoriteList(user)
+  }
+
 }
+
+
+

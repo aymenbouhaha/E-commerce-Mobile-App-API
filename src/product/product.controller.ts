@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe,  Post, UseGuards} from '@nestjs/common';
 import {ProductService} from "./product.service";
 import {JwtAuthGuard} from "../user/guard/jwt-auth.guard";
 import {User} from "../decorator/user.decorator";
@@ -35,5 +35,6 @@ export class ProductController {
     ){
         return this.productService.deleteProduct(id,user)
     }
+
 
 }

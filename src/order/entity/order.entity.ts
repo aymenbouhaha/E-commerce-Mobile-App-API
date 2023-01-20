@@ -23,13 +23,21 @@ export class OrderEntity {
     state : string
 
     @ManyToOne(
-        type => ProductEntity
+        type => ProductEntity,
+        {
+            onDelete : "CASCADE",
+            onUpdate : "CASCADE"
+        }
     )
     product : ProductEntity
 
 
     @ManyToOne(
-        type => UserEntity
+        type => UserEntity,
+        {
+            onDelete : "CASCADE",
+            onUpdate : "CASCADE"
+        }
     )
     client : UserEntity
 

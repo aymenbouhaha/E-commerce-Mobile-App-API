@@ -1,4 +1,4 @@
-import { OrderDTO} from './order.dto';
+import { AddOrderDto} from './dto/add-order.dto';
 import {ConflictException, Injectable, UnauthorizedException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {OrderEntity} from "./entity/order.entity";
@@ -32,18 +32,23 @@ export class OrderService {
         }catch (e){
             throw new ConflictException("Un erreur est survenue lors du changement de l'etat de la commande")
         }
-
-
     }
 
-    async create(order: OrderDTO): Promise<OrderEntity> {
-    // Get data from input and structure it.
-      const new_order = {
-        produit: order.product,
-        client: order.client,
-      };
-      return await this.orderRepository.save(new_order);
+    async create(order: AddOrderDto , user : Partial<UserEntity>){
+      if (user.role !=UserRole.client){
+          throw new UnauthorizedException("L'admin ne peut pas faire une commade")
+      }
+      const newOrder=this.orderRepository.create({
+          product : order.product,
+          client : user
+      })
+        try {
+            return await this.orderRepository.save(newOrder);
+        }catch (e) {
+            throw new ConflictException("Vous pouvez pas passer la commande")
+        }
     }
+
 
 
 

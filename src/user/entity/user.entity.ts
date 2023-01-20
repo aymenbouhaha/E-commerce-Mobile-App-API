@@ -56,7 +56,7 @@ export class UserEntity {
   })
   role: string;
 
-  @ManyToMany((type) => ProductEntity, (product) => product.clientFav)
+  @ManyToMany((type) => ProductEntity, (product) => product.clientFav , {onDelete : "CASCADE", onUpdate : "CASCADE"})
   @JoinTable({
     name: 'user_fav',
     joinColumn: {
