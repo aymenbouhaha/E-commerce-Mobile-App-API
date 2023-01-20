@@ -10,18 +10,27 @@ export enum OrderState {
 
 @Entity('order')
 export class OrderEntity {
-  @PrimaryGeneratedColumn()
-  id: string;
+    @PrimaryGeneratedColumn()
+    id :number
 
-  @Column({
-    type: 'enum',
-    enum: OrderState,
-    default: OrderState.enCours,
-  })
-  state: string;
-  // createdAt: Date;
-  @ManyToOne((type) => ProductEntity)
-  product: ProductEntity;
-  @ManyToOne((type) => UserEntity)
-  client: UserEntity;
+    @Column(
+        {
+            type : "enum",
+            enum : OrderState,
+            default : OrderState.enCours
+        }
+    )
+    state : string
+
+    @ManyToOne(
+        type => ProductEntity
+    )
+    product : ProductEntity
+
+
+    @ManyToOne(
+        type => UserEntity
+    )
+    client : UserEntity
+
 }

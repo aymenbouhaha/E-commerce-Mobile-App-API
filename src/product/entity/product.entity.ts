@@ -19,6 +19,16 @@ export class ProductEntity {
   @Column()
   description: string;
 
-  @ManyToMany((type) => UserEntity, (user) => user.favoriteProduct)
-  clientFav?: UserEntity[];
+    @Column()
+    image : string
+
+    @Column()
+    description : string
+
+    @ManyToMany(
+        type => UserEntity,
+        user => user.favoriteProduct
+    )
+    clientFav? : UserEntity[]
+    
 }

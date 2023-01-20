@@ -1,34 +1,36 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Get,
-  Query,
-  Param,
-  ParseIntPipe,
-} from '@nestjs/common';
-import { OrderService } from './order.service';
-import { OrderDTO, OrderIdDTO } from './order.dto';
-import { OrderEntity } from './entity/order.entity';
+import { OrderDTO} from './order.dto';
+import {Body, Controller, Get, Param, ParseIntPipe, Patch, UseGuards} from '@nestjs/common';
+import {OrderService} from "./order.service";
+import {JwtAuthGuard} from "../user/guard/jwt-auth.guard";
+import {User} from "../decorator/user.decorator";
+import {UserEntity} from "../user/entity/user.entity";
+import {ChangeStateDto} from "./dto/change-state.dto";
 
-@Controller('orders')
-//create and export the controller
+@Controller('order')
 export class OrderController {
-  // define the orders service
-  constructor(private orderService: OrderService) {}
-  @Get('/show/:id')
-  async findAll(@Param('id', ParseIntPipe) id): Promise<OrderEntity[]> {
-    const all_orders = await this.orderService.findAll(id); // get all orders
-    return all_orders;
-  }
-  @Post('/create')
-  async create(@Body() order: OrderDTO) {
-    const created_order = await this.orderService.create(order); // Create an order
+
+    constructor(private orderService : OrderService) {
+    }
+
+
+    @Get()
+    @UseGuards(JwtAuthGuard)
+    getOrderList(@User() user : Partial<UserEntity>){
+        return this.orderService.getOrderList(user)
+    }
+
+    @Patch("/change/:id")
+    @UseGuards(JwtAuthGuard)
+    changeOrderState(@Body() newOrderState : ChangeStateDto ,@User() user : Partial<UserEntity> , @Param("id" , ParseIntPipe) id){
+        return this.orderService.changeOrderState(id,user,newOrderState);
+    }
+    
+    
+     @Post('/create')
+    async create(@Body() order: OrderDTO) {
+    const created_order = await this.orderService.create(order); 
     return created_order;
-  }
-  @Post('/delete')
-  async delete(@Query() orderId: OrderIdDTO) {
-    const deleted_order = await this.orderService.delete(orderId); // delete the orderd
-    return deleted_order;
-  }
+    }
+
+
 }

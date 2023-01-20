@@ -46,22 +46,48 @@ export class UserService {
     };
   }
 
-  async login(credentials: LoginDto) {
-    const { email, password } = credentials;
-    const user = await this.userRepository.findOneBy([{ email: email }]);
 
-    if (!user) {
-      throw new NotFoundException(`l'email ou le mot de passe sont incorrecte`);
+    async signUp(userData: UserSignUpDto) : Promise<Partial<UserEntity>>{
+        const user = this.userRepository.create(
+            {
+                ...userData
+            }
+        )
+        user.salt = await bcrypt.genSalt();
+        user.password= await bcrypt.hash(user.password,user.salt)
+        try {
+            await this.userRepository.save(user);
+        }catch (e){
+            throw new ConflictException(`l'email et le username doivent etre unique`)
+        }
+        return {
+            id : user.id,
+            email : user.email,
+            username : user.username,
+            role : user.role
+        }
     }
-    const hashedPassword = await bcrypt.hash(password, user.salt);
-    if (hashedPassword == user.password) {
-      const payload = {
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        image: user.image,
-        phoneNumber: user.phoneNumber,
-      };
+
+
+    async login(credentials : LoginDto){
+        const {email , password} =credentials;
+        const user = await this.userRepository.findOneBy([{email : email}])
+
+        if (!user){
+            throw new NotFoundException(`l'email ou le mot de passe sont incorrecte`)
+        }
+        const hashedPassword = await bcrypt.hash(password, user.salt)
+        if (hashedPassword== user.password){
+            const payload = {
+                id : user.id,
+                username : user.username,
+                email :user.email ,
+                role : user.role ,
+                image : user.image ,
+                phoneNumber : user.phoneNumber
+            }
+
+            const token = await this.jwtService.sign(payload)
 
       const token = await this.jwtService.sign(payload);
 
@@ -72,6 +98,7 @@ export class UserService {
       throw new NotFoundException(`l'email ou le mot de passe sont incorrecte`);
     }
   }
+
 
   //adding a product to favorite list :
   async addTofavorite(
@@ -85,4 +112,10 @@ export class UserService {
     User.favoriteProduct.push(produit);
     return await this.userRepository.save(User);
   }
+
+    modifyProfile(){
+
+    }
+
+
 }
