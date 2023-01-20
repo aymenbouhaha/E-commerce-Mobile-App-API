@@ -8,6 +8,7 @@ import {OrderEntity} from "./entity/order.entity";
 @Module({
   imports :[TypeOrmModule.forFeature([OrderEntity])],
   controllers: [OrderController],
-  providers: [OrderService]
+  providers: [OrderService],
+  exports: [OrderService],
 })
 export class OrderModule {}

@@ -1,3 +1,4 @@
+import { OrderDTO} from './order.dto';
 import {ConflictException, Injectable, UnauthorizedException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {OrderEntity} from "./entity/order.entity";
@@ -35,8 +36,14 @@ export class OrderService {
 
     }
 
-
-
+    async create(order: OrderDTO): Promise<OrderEntity> {
+    // Get data from input and structure it.
+      const new_order = {
+        produit: order.product,
+        client: order.client,
+      };
+      return await this.orderRepository.save(new_order);
+    }
 
 
 
