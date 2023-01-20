@@ -20,6 +20,9 @@ export class ProductEntity {
     @Column()
     image : string
 
+    @Column()
+    description : string
+
     @ManyToMany(
         type => UserEntity,
         user => user.favoriteProduct
